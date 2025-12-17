@@ -22,7 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class ItemServiceTest {
+public class ItemServiceUnitTest {
 
     @Mock
     private ItemRepository itemRepository;
@@ -92,7 +92,7 @@ public class ItemServiceTest {
     ////////////////////////////////////////////////////////////////////////
 
     @Test
-    void saveNewItem_ShouldReturnItem() {
+    void saveNewItem_ShouldReturnSavedItem() {
 
         Item itemToBeSaved = new Item("apple", 45);
         Item itemSaved = new Item(100L, "apple", 45);
@@ -120,6 +120,7 @@ public class ItemServiceTest {
 
         when(itemRepository.findByName(itemDetails.getName()))
             .thenReturn(Optional.of(itemToBeUpdated));
+            
         when(itemRepository.save(any(Item.class)))
             .thenReturn(itemUpdated);
 
@@ -153,7 +154,7 @@ public class ItemServiceTest {
     //////////////////////////////////////////////////////////////////////////////////
     
     @Test
-    void deleteItem_WhenFound() {
+    void deleteItem_ShouldDeleteItem_WhenFound() {
 
         Item itemToBeDeleted = new Item("apple", 45);
 
@@ -167,7 +168,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void deleteItem_WhenNotFound() {
+    void deleteItem_ShouldThrowItemNotFoundException_WhenNotFound() {
 
         String itemName = "ananas";
 
@@ -175,7 +176,7 @@ public class ItemServiceTest {
             .thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class, 
-            () -> itemService.getItem(itemName)
+            () -> itemService.deleteItem(itemName)
         );
 
 

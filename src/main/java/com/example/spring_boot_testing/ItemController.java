@@ -45,7 +45,7 @@ public class ItemController {
 
     @GetMapping("/{name}")
     public ResponseEntity<Item> getItem(@PathVariable String name) {
-        Item item = itemService.getItem(name).get();
+        Item item = itemService.getItem(name);
         return ResponseEntity.ok(item);
     }
 

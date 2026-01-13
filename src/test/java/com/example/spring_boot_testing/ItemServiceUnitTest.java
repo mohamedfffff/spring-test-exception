@@ -64,11 +64,11 @@ public class ItemServiceUnitTest {
         when(itemRepository.findByName(existingItemName))
             .thenReturn(Optional.of(new Item(existingItemName, 5)));
 
-        Optional<Item> foundItem = itemService.getItem(existingItemName);
+        Item foundItem = itemService.getItem(existingItemName);
 
-        assertTrue(foundItem.isPresent());
-        assertEquals(foundItem.get().getName(), existingItemName);
-        assertEquals(foundItem.get().getPrice(), 5);
+        assertTrue(foundItem != null);
+        assertEquals(foundItem.getName(), existingItemName);
+        assertEquals(foundItem.getPrice(), 5);
 
         verify(itemRepository, times(1)).findByName(existingItemName);
     }
@@ -95,7 +95,7 @@ public class ItemServiceUnitTest {
     void saveNewItem_ShouldReturnSavedItem() {
 
         Item itemToBeSaved = new Item("apple", 45);
-        Item itemSaved = new Item(100L, "apple", 45);
+        Item itemSaved = new Item(69L, "apple", 45);
 
         when(itemRepository.save(itemToBeSaved))
             .thenReturn(itemSaved);
@@ -103,7 +103,7 @@ public class ItemServiceUnitTest {
         Item foundItem = itemService.saveNewItem(itemToBeSaved.getName(), itemToBeSaved.getPrice());
 
         assertNotNull(foundItem);
-        assertEquals(foundItem.getId(), 100L);
+        assertEquals(foundItem.getId(), 69L);
 
         verify(itemRepository).save(itemToBeSaved);
     }

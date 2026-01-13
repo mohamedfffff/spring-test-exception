@@ -16,6 +16,10 @@ public class ItemService {
     }
 
     public Item saveNewItem(String name, double price) {
+        Optional<Item> item = itemRepository.findByName(name);
+        if (item.isPresent()) {
+            throw new ItemAlreadlyExistsException("item with name " + name + " already exists"); 
+        }
         Item newItem = new Item(name, price);
         return itemRepository.save(newItem);
         
@@ -24,7 +28,7 @@ public class ItemService {
     public Item updateItem(String name, double price) {
         Optional<Item> item = itemRepository.findByName(name);
         if (item.isEmpty()) {
-            throw new ItemNotFoundException(name);
+            throw new ItemNotFoundException("item with name " + name + " does not exist");
         } else {
             Item newItem = item.get();
             newItem.setName(name);
@@ -37,19 +41,15 @@ public class ItemService {
     public void deleteItem(String name) {
         Optional<Item> item = itemRepository.findByName(name);
         if (item.isEmpty()) {
-            throw new ItemNotFoundException(name);
+            throw new ItemNotFoundException("item with name " + name + " does not exist");
             
         }
         itemRepository.deleteByName(name);
     }
 
-    public Optional<Item> getItem(String name) {
-        Optional<Item> item = itemRepository.findByName(name);
-        if (item.isEmpty()) {
-            throw new ItemNotFoundException(name);
-        } else {
-            return item;
-        }
+    public Item getItem(String name) {
+        return itemRepository.findByName(name)
+            .orElseThrow(() -> new ItemNotFoundException("item with name " + name + " does not exist"));
     }
 
     public List<Item> getAllItems() {
